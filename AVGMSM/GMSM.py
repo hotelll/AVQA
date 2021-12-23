@@ -1,12 +1,12 @@
 import numpy as np
-from utils import conv2d
+from utils.utils import conv2d
 
 def GMSM(reference, distorted):
     T=170
     down_step = 2
     # Prewitt operator
-    dx = np.array([[1, 0, -1], [1, 0, -1], [1, 0, -1]] / 3, 
-                  dtype=np.float64)
+    dx = np.array([[1, 0, -1], [1, 0, -1], [1, 0, -1]], 
+                  dtype=np.float64) / 3.
     dy = dx.transpose()
     
     # average filter
@@ -19,12 +19,9 @@ def GMSM(reference, distorted):
     distorted = distorted[::down_step, ::down_step]
     reference = reference[::down_step, ::down_step]
     
-    grad1 = conv2d(reference, dx, 'same')**2 \
-          + conv2d(reference, dy, 'same')**2
-    grad2 = conv2d(distorted, dx, 'same')**2 \
-          + conv2d(distorted, dy, 'same')**2
+    grad1 = conv2d(reference, dx, 'same')**2 + conv2d(reference, dy, 'same')**2
+    grad2 = conv2d(distorted, dx, 'same')**2 + conv2d(distorted, dy, 'same')**2
 
-    quality_map = (2 * np.sqrt(grad1) * np.sqrt(grad2) + T) \
-                    / (grad1 + grad2 + T)
-    GMSM_score = np.mean(quality_map)
+    quality_map = (2 * np.sqrt(grad1) * np.sqrt(grad2) + T) / (grad1 + grad2 + T)
+    GMSM_score = np.nanmean(quality_map)
     return GMSM_score

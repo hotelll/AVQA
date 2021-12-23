@@ -1,5 +1,5 @@
 import numpy as np
-from utils import conv1d, gaussian_kernel
+from utils.utils import conv1d, gaussian_kernel
 
 def VIFP_1D(reference, distorted):
     sigma_nsq = 2
@@ -10,16 +10,16 @@ def VIFP_1D(reference, distorted):
     for scale in range(1, 5):
         VIFP_score = 0
         N = 2**(5 - scale) + 1
-        win = gaussian_kernel([1, N], N / 5.0)
+        win = gaussian_kernel([N,1], N / 5.0).squeeze(1)
         
         if scale > 1:
-            reference = conv1d(reference, win)
-            distorted = conv1d(distorted, win)
-            reference = reference[::2, ::2]
-            distorted = distorted[::2, ::2]
+            reference = conv1d(reference, win, 'valid')
+            distorted = conv1d(distorted, win, 'valid')
+            reference = reference[::2]
+            distorted = distorted[::2]
             
-        mu1 = conv1d(reference, win)
-        mu2 = conv1d(distorted, win)
+        mu1 = conv1d(reference, win, 'valid')
+        mu2 = conv1d(distorted, win, 'valid')
         sigma1_sq = conv1d(reference * reference, win, 'valid') - mu1 * mu1
         sigma2_sq = conv1d(distorted * distorted, win, 'valid') - mu2 * mu2
         sigma12   = conv1d(reference * distorted, win, 'valid') - mu1 * mu2

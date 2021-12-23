@@ -1,5 +1,5 @@
 import numpy as np
-from utils import conv1d
+from utils.utils import conv1d
 
 def GMSM_1D(reference, distorted):
     down_step = 64
@@ -8,8 +8,8 @@ def GMSM_1D(reference, distorted):
     distorted = conv1d(distorted, ave_kernel, 'valid')
     
     # down-sampling
-    distorted = distorted[::down_step, ::down_step]
-    reference = reference[::down_step, ::down_step]
+    distorted = distorted[::down_step]
+    reference = reference[::down_step]
     
     dx = np.array([1, 0, -1])
     grad1 = conv1d(reference, dx, 'valid')
@@ -17,5 +17,5 @@ def GMSM_1D(reference, distorted):
     gm1 = np.abs(grad1)
     gm2 = np.abs(grad2)
     quality_map = (2 * gm1 * gm2) / (gm1**2 + gm2**2)
-    GMSM_1D_score = np.mean(quality_map)
+    GMSM_1D_score = np.nanmean(quality_map)
     return GMSM_1D_score

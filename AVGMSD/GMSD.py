@@ -5,8 +5,8 @@ def GMSD(reference, distorted):
     T=170
     down_step = 2
     # Prewitt operator
-    dx = np.array([[1, 0, -1], [1, 0, -1], [1, 0, -1]] / 3, 
-                  dtype=np.float64)
+    dx = np.array([[1, 0, -1], [1, 0, -1], [1, 0, -1]], 
+                  dtype=np.float64) / 3.
     dy = dx.transpose()
     
     # average filter
@@ -23,5 +23,5 @@ def GMSD(reference, distorted):
     grad2 = conv2d(distorted, dx, 'same')**2 + conv2d(distorted, dy, 'same')**2
 
     quality_map = (2 * np.sqrt(grad1) * np.sqrt(grad2) + T) / (grad1 + grad2 + T)
-    gmsd_score = np.std(quality_map, ddof=1)
+    gmsd_score = np.nanstd(quality_map, ddof=1)
     return gmsd_score

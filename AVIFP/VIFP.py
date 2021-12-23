@@ -1,5 +1,5 @@
 import numpy as np
-from utils import filter2d, gaussian_kernel
+from utils.utils import filter2d, gaussian_kernel
 
 def VIFP(reference, distorted):
     sigma_nsq = 2

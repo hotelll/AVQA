@@ -1,11 +1,12 @@
 import numpy as np
-from MS_SSIM import MS_SSIM
-from MS_SSIM_1D import MS_SSIM_1D
+from AVMSSSIM.MS_SSIM import MS_SSIM
+from AVMSSSIM.MS_SSIM_1D import MS_SSIM_1D
+from tqdm import tqdm
 
 def AVMSSSIM(ref_video, dis_video, ref_audio, dis_audio):
     frame_num = ref_video.shape[2]
     mssim_frame = np.zeros((frame_num,))
-    for i in range(frame_num):
+    for i in tqdm(range(frame_num)):
         ref_frame = ref_video[:, :, i]
         dis_frame = dis_video[:, :, i]
         mssim_frame[i] = MS_SSIM(ref_frame, dis_frame)
